@@ -9,27 +9,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -41,15 +25,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -57,88 +32,156 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final _valueList = ["연", "월", "일"];
+  var _selectedValue = "연";
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  Color getStatusColor(age, currentAge) {
+  Map<String, Color> getStatusColor(age, currentAge) {
+    Map<String, Color> statusColor = {
+      "status": Colors.white,
+      "ageText": Colors.black
+    };
     var rate = Random().nextInt(100);
     var isSuccess = rate >= 5;
 
     if (age < currentAge) {
       if (isSuccess) {
-        return Colors.green;
+        statusColor["status"] = Colors.green;
+        statusColor["ageText"] = Colors.white;
+
       } else {
-        return Colors.red;
+        statusColor["status"] = Colors.red;
+        statusColor["ageText"] = Colors.white;
       }
-    } else {
-      return Colors.white;
+    } else if (age > 60) {
+      statusColor["status"] = Colors.black45;
+      statusColor["ageText"] = Colors.white;
     }
+    return statusColor;
+  }
+
+  Map<String, int> getDateFilterData(value) {
+    Map<String, int> dateFilterData = {
+      "horizonItemCount": 24,
+      "totalItemCount": 960,
+      "displayAgeInterval": 1,
+    };
+
+    switch(value) {
+      case "연":
+        dateFilterData["horizonItemCount"] = 1;
+        dateFilterData["totalItemCount"] = 2;
+        dateFilterData["displayAgeInterval"] = 3;
+        break;
+      case "월":
+        dateFilterData["horizonItemCount"] = 1;
+        dateFilterData["totalItemCount"] = 2;
+        dateFilterData["displayAgeInterval"] = 3;
+        break;
+      case "일":
+        dateFilterData["horizonItemCount"] = 1;
+        dateFilterData["totalItemCount"] = 2;
+        dateFilterData["displayAgeInterval"] = 3;
+        break;
+      default:
+        dateFilterData["horizonItemCount"] = 1;
+        dateFilterData["totalItemCount"] = 2;
+        dateFilterData["displayAgeInterval"] = 3;
+        break;
+    }
+    return dateFilterData;
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(widget.title,),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.count(
-          crossAxisCount: 24 ~/ 2,
-          children: List.generate(960 ~/ 4, (index) {
-            var age = (index ~/ (12 / 4)) + 1;
-            var currentAge = 33;
-            var ageText = index % (24 ~/ 4) == 0 ? "$age" : "";
-
-            return Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  print("Button $index pressed");
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  backgroundColor: getStatusColor(age, currentAge),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(1.0),
-                    side: BorderSide(
-                        color: age < currentAge ? Colors.grey : Colors.grey
-                    )
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "인생은 짧아요 !",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
                   )
                 ),
-                child: Text(
-                    ageText,
-                  style: TextStyle(
-                    fontSize: 8.0,
-                  )
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text("필터 : "),
+                    DropdownButton(
+                      value: _selectedValue,
+                      items: _valueList.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value)
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedValue = value!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.count(
+                crossAxisCount: 24 ~/ 1.5,
+                children: List.generate(960 ~/ 3, (index) {
+                  var age = (index ~/ (12 / 3)) + 1;
+                  var currentAge = 33;
+                  var ageText = index % (24 ~/ 5) == 0 ? "$age" : "";
+                  var statusColor = getStatusColor(age, currentAge);
+
+                  return Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print("Button $index pressed");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        backgroundColor: statusColor["status"],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1.0),
+                          side: BorderSide(
+                            color: age < currentAge
+                              ? Colors.grey
+                              : Colors.grey
+                          )
+                        )
+                      ),
+                      child: Text(
+                          ageText,
+                        style: TextStyle(
+                          fontSize: 8.0,
+                          color: statusColor["ageText"]
+                        )
+                      )
+                    ),
+                  );
+                })
               ),
-            );
-          })
-        ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
