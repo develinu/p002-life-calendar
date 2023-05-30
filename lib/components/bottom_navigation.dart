@@ -17,6 +17,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     return Consumer<BottomNavigationService> (
         builder: (context, bottomNavigationBarService, child) {
           return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             showSelectedLabels: false,
             showUnselectedLabels: false,
             currentIndex: bottomNavigationBarService.selectedTabIndex,
@@ -28,6 +29,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   // color: Color(0xff1A7F64),
                 ),
                 label: '캘린더',
+              ),
+
+              BottomNavigationBarItem(
+                icon: Icon(
+                  CupertinoIcons.square_list,
+                ),
+                label: '홈',
               ),
 
               BottomNavigationBarItem(

@@ -4,6 +4,7 @@ import 'package:p_002/providers/bottom_navigation_service.dart';
 import 'package:p_002/screens/account.dart';
 import 'package:p_002/screens/calendar.dart';
 import 'package:p_002/screens/motivation.dart';
+import 'package:p_002/screens/todos.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -46,6 +47,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const List<Widget> _pages = <Widget>[
     Calendar(),
+    Todos(),
     Motivation(),
     Account(),
   ];
