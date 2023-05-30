@@ -23,7 +23,7 @@ class _CalendarState extends State<Calendar> {
     var rate = Random().nextInt(100);
     var isSuccess = rate >= 5;
 
-    if (age >= 21 && age < currentAge) {
+    if (age < currentAge) {
       if (isSuccess) {
         statusColor["status"] = Colors.green;
         statusColor["ageText"] = Colors.white;
@@ -37,9 +37,6 @@ class _CalendarState extends State<Calendar> {
       statusColor["ageText"] = Colors.black;
     } else if (age > 60) {
       statusColor["status"] = Colors.black45;
-      statusColor["ageText"] = Colors.white;
-    } else if (age < 21) {
-      statusColor["status"] = Colors.blueGrey;
       statusColor["ageText"] = Colors.white;
     }
     return statusColor;
@@ -153,7 +150,6 @@ class _CalendarState extends State<Calendar> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            createLegend(Colors.blueGrey, "성장기"),
             createLegend(Colors.green, "완료"),
             createLegend(Colors.red, "미흡"),
             createLegend(Colors.lightGreenAccent, "진행중"),
